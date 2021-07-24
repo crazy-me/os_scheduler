@@ -4,12 +4,18 @@
 *.dll
 *.so
 *.dylib
-
+.idea/
+.log
 # Test binary, built with `go test -c`
 *.test
+.DS_Store
+.vscode
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+logs/
+### test ###
+/testing/
 
 # Dependency directories (remove the comment below to include it)
 # vendor/

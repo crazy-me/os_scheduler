@@ -1,0 +1,26 @@
+# system configuration
+system:
+  addr: 8080
+  env: "debug" # app/debug
+
+# etcd configuration
+etcd:
+  endpoints: ["127.0.0.1:2379"]
+  timeout: 5000
+
+# mongodb configuration
+mongodb:
+  endpoints: "127.0.0.1:2379"
+  timeout: 5000
+
+# Logs configuration
+zap:
+  level: 'info'
+  format: 'console'
+  prefix: '[OS-ALARM]'
+  director: 'logs'
+  link-name: 'latest_log'
+  show-line: true
+  encode-level: 'LowercaseColorLevelEncoder'
+  stacktrace-key: 'stacktrace'
+  log-in-console: true
