@@ -33,13 +33,15 @@ func InitEtcd() (err error) {
 	)
 	config = clientv3.Config{
 		Endpoints:   conf.C.Etcd.Endpoints,
-		DialTimeout: time.Duration(conf.C.Etcd.Timeout) * time.Millisecond,
+		DialTimeout: time.Duration(conf.C.Etcd.Timeout) * time.Second,
 	}
 
 	if conn, err = clientv3.New(config); err != nil {
 		logger.L.Error("etcd clientv3.New err:", zap.Any("connect", err))
 		return
 	}
+
+	fmt.Println(conn)
 	kv = clientv3.NewKV(conn)
 	less = clientv3.NewLease(conn)
 
@@ -81,7 +83,7 @@ func (e *clientEtcd) DeleteJob(job *entity.Job) (oldJob *entity.Job, err error) 
 		jobKey string
 		resp   *clientv3.DeleteResponse
 	)
-	fmt.Println(jobKey)
+
 	jobKey = fmt.Sprintf(constants.JOB_SAVE_DIR+"%s/%d", job.JobType, job.JobId)
 	if resp, err = e.kv.Delete(context.TODO(), jobKey, clientv3.WithPrevKV()); err != nil {
 		return
@@ -114,6 +116,25 @@ func (e *clientEtcd) ListJob() (listJob []*entity.Job, err error) {
 		tmpJob = &entity.Job{}
 		_ = json.Unmarshal(kvPair.Value, tmpJob)
 		listJob = append(listJob, tmpJob)
+	}
+	return
+}
+
+// KillJob 强杀Job
+func (e *clientEtcd) KillJob(job *entity.Job) (err error) {
+	var (
+		killJobKey string
+		lessGrant  *clientv3.LeaseGrantResponse
+	)
+	// 获取一个带有效期的租约
+	if lessGrant, err = e.less.Grant(context.TODO(), 1); err != nil {
+		return
+	}
+
+	killJobKey = fmt.Sprintf(constants.JON_KILLER_DIR+"%s/%d", job.JobType, job.JobId)
+	// 向etcd投递事件来通知Work杀掉当前任务
+	if _, err = e.kv.Put(context.TODO(), killJobKey, "", clientv3.WithLease(lessGrant.ID)); err != nil {
+		return
 	}
 	return
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
 	"time"
 )
 
@@ -15,8 +16,16 @@ func RunServer() {
 	if conf.C.System.Env == "app" {
 		gin.SetMode(gin.ReleaseMode)
 	}
+	// 加载静态文件及模版
+	route.StaticFS("/static", http.Dir("./resource"))
+	route.LoadHTMLGlob("resource/view/*")
+	route.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"title": "多任务调度系统",
+		})
+	})
 	route.POST("/job/save", api.SaveJob)
-	route.POST("/job/k", api.KillJob)
+	route.POST("/job/kill", api.KillJob)
 	route.POST("/job/del", api.DelJob)
 	route.POST("/job/list", api.ListJob)
 	address := ":" + string(conf.C.System.Addr)

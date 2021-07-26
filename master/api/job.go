@@ -17,15 +17,15 @@ func SaveJob(c *gin.Context) {
 		job     entity.Job
 		saveJob *entity.Job
 	)
-	if err := c.ShouldBindJSON(&job); err != nil {
+	if err = c.ShouldBindJSON(&job); err != nil {
 		logger.L.Error("api-SaveJob err:", zap.Any("c.ShouldBindJSON", err))
-		c.JSON(http.StatusBadRequest, resut.FAIL())
+		c.JSON(http.StatusOK, resut.FAIL())
 		return
 	}
 	// 保存Job
 	if saveJob, err = etcd.Client.SaveJob(&job); err != nil {
 		logger.L.Error("api-SaveJob err:", zap.Any("etcd.Client.SaveJob", err))
-		c.JSON(http.StatusBadRequest, resut.FAIL())
+		c.JSON(http.StatusOK, resut.FAIL())
 		return
 	}
 	c.JSON(http.StatusOK, resut.DATA(saveJob))
@@ -40,14 +40,14 @@ func DelJob(c *gin.Context) {
 	)
 	if err = c.ShouldBindJSON(&job); err != nil {
 		logger.L.Error("api-DelJob err:", zap.Any("c.ShouldBindJSON", err))
-		c.JSON(http.StatusBadRequest, resut.FAIL())
+		c.JSON(http.StatusOK, resut.FAIL())
 		return
 	}
 
 	// 删除Job
 	if delJob, err = etcd.Client.DeleteJob(&job); err != nil {
 		logger.L.Error("api-DelJob err:", zap.Any("etcd.Client.DeleteJob", err))
-		c.JSON(http.StatusBadRequest, resut.FAIL())
+		c.JSON(http.StatusOK, resut.FAIL())
 		return
 	}
 	c.JSON(http.StatusOK, resut.DATA(delJob))
@@ -62,12 +62,24 @@ func ListJob(c *gin.Context) {
 
 	if listJob, err = etcd.Client.ListJob(); err != nil {
 		logger.L.Error("api-ListJob err:", zap.Any("etcd.Client.ListJob", err))
-		c.JSON(http.StatusBadRequest, resut.FAIL())
+		c.JSON(http.StatusOK, resut.FAIL())
 		return
 	}
 	c.JSON(http.StatusOK, resut.DATA(listJob))
 }
 
+// KillJob 强杀Job
 func KillJob(c *gin.Context) {
-
+	var job entity.Job
+	if err := c.ShouldBindJSON(&job); err != nil {
+		logger.L.Error("api-KillJob err:", zap.Any("c.ShouldBindJSON", err))
+		c.JSON(http.StatusOK, resut.FAIL())
+		return
+	}
+	if err := etcd.Client.KillJob(&job); err != nil {
+		logger.L.Error("api-KillJob err:", zap.Any("etcd.Client.KillJob", err))
+		c.JSON(http.StatusOK, resut.FAIL())
+		return
+	}
+	c.JSON(http.StatusOK, resut.SUCCESS())
 }

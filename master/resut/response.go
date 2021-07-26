@@ -1,8 +1,8 @@
 package resut
 
 const (
-	ErrorCode   = 0
-	SuccessCode = 1
+	ErrorCode   = -1
+	SuccessCode = 0
 )
 
 type Rest struct {

@@ -22,7 +22,6 @@ func main() {
 		fmt.Println("etcd clientv3.New err:", err)
 		os.Exit(-1)
 	}
-
 	router.RunServer()
 }
 
