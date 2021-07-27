@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/crazy-me/os_scheduler/common/logger"
 	"github.com/crazy-me/os_scheduler/master/conf"
 	"github.com/crazy-me/os_scheduler/master/etcd"
+	"github.com/crazy-me/os_scheduler/master/logger"
 	"github.com/crazy-me/os_scheduler/master/router"
 	"log"
 	"os"

@@ -1,7 +1,5 @@
 # system configuration
-system:
-  addr: 8080
-  env: "debug" # app/debug
+job-event-chan: 1000
 
 # etcd configuration
 etcd:
@@ -10,15 +8,28 @@ etcd:
 
 # mongodb configuration
 mongodb:
+  enable: true
   endpoints: "127.0.0.1:2379"
   timeout: 1 # 链接超时秒
+
+# redis configuration
+redis:
+  enable: false
+  db: 0
+  addr: '127.0.0.1:6379'
+  password: ''
+  max-retry-times: 2
+  max-idle: 10
+  max-active: 10
+  max-idle-timeout: 3
+
 
 # Logs configuration
 zap:
   level: 'info'
   format: 'console'
-  prefix: '[scheduler-master]'
-  director: 'logs/master'
+  prefix: '[scheduler-work]'
+  director: 'logs/work'
   link-name: 'latest_log'
   show-line: true
   encode-level: 'LowercaseColorLevelEncoder'

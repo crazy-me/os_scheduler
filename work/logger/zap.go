@@ -3,7 +3,7 @@ package logger
 import (
 	"fmt"
 	"github.com/crazy-me/os_scheduler/common/utils"
-	"github.com/crazy-me/os_scheduler/master/conf"
+	"github.com/crazy-me/os_scheduler/work/conf"
 	zaprotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -21,7 +21,7 @@ var (
 func InitLogger() error {
 	logFile := conf.C.Zap.Director
 	if ok, _ := utils.PathExists(logFile); !ok {
-		if err = os.Mkdir(logFile, os.ModePerm); err != nil {
+		if err = os.MkdirAll(logFile, os.ModePerm); err != nil {
 			return err
 		}
 	}

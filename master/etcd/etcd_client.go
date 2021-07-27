@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/crazy-me/os_scheduler/common/constants"
-	"github.com/crazy-me/os_scheduler/common/logger"
+	"github.com/crazy-me/os_scheduler/common/entity"
 	"github.com/crazy-me/os_scheduler/master/conf"
-	"github.com/crazy-me/os_scheduler/master/entity"
+	"github.com/crazy-me/os_scheduler/master/logger"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
@@ -41,7 +41,6 @@ func InitEtcd() (err error) {
 		return
 	}
 
-	fmt.Println(conn)
 	kv = clientv3.NewKV(conn)
 	less = clientv3.NewLease(conn)
 
@@ -131,7 +130,7 @@ func (e *clientEtcd) KillJob(job *entity.Job) (err error) {
 		return
 	}
 
-	killJobKey = fmt.Sprintf(constants.JON_KILLER_DIR+"%s/%d", job.JobType, job.JobId)
+	killJobKey = fmt.Sprintf(constants.JOB_KILLER_DIR+"%s/%d", job.JobType, job.JobId)
 	// 向etcd投递事件来通知Work杀掉当前任务
 	if _, err = e.kv.Put(context.TODO(), killJobKey, "", clientv3.WithLease(lessGrant.ID)); err != nil {
 		return
