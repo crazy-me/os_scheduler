@@ -3,45 +3,50 @@ package main
 import (
 	"flag"
 	"github.com/crazy-me/os_scheduler/work/conf"
-	"github.com/crazy-me/os_scheduler/work/etcd"
-	"github.com/crazy-me/os_scheduler/work/executor"
+	"github.com/crazy-me/os_scheduler/work/data_source/etcd"
+	"github.com/crazy-me/os_scheduler/work/data_source/mongo"
 	"github.com/crazy-me/os_scheduler/work/logger"
-	"github.com/crazy-me/os_scheduler/work/scheduler"
+	"github.com/crazy-me/os_scheduler/work/logic"
 	"log"
 	"os"
-	"runtime"
 )
 
 var configFile string
 
 func main() {
-	initEnv()
 	initArgs()
 	initLoad()
-	// 启动调度程序
-	if err := scheduler.InitSchedule(); err != nil {
-		log.Println("scheduler start err:", err)
+
+	// 调度器
+	if err := logic.InitSchedule(); err != nil {
+		log.Println("logic.InitSchedule err:", err)
 		os.Exit(-1)
 	}
 
-	// 启动执行器
-	if err := executor.InitExecutor(); err != nil {
-		log.Println("executor.InitExecutor err:", err)
+	// 执行器
+	if err := logic.InitExecutor(); err != nil {
+		log.Println("logic.InitExecutor err:", err)
 		os.Exit(-1)
 	}
 
+	// Etcd
 	if err := etcd.InitEtcd(); err != nil {
-		log.Println("etcd client.New err:", err)
+		log.Println("etcd.InitEtcd err:", err)
 		os.Exit(-1)
 	}
 
-	select {}
-}
+	// mongo
+	if err := mongo.InitMongo(); err != nil {
+		log.Println("mongo.InitMongo err:", err)
+		os.Exit(-1)
+	}
 
-// 系统环境
-func initEnv() {
-	numCPU := runtime.NumCPU()
-	runtime.GOMAXPROCS(numCPU)
+	// 监听任务事件
+	if err := logic.WatchJobs(); err != nil {
+		log.Println("logic.WatchJobs err:", err)
+		os.Exit(-1)
+	}
+	select {}
 }
 
 func initArgs() {

@@ -7,10 +7,11 @@ etcd:
   timeout: 1 # 链接超时秒
 
 # mongodb configuration
-mongodb:
+mongo:
   enable: true
-  endpoints: "127.0.0.1:2379"
+  endpoints: "mongodb://localhost:27017"
   timeout: 1 # 链接超时秒
+  db: "hydo"
 
 # redis configuration
 redis:

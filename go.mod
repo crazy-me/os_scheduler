@@ -13,5 +13,6 @@ require (
 	github.com/spf13/viper v1.8.1
 	go.etcd.io/etcd/api/v3 v3.5.0 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.0
+	go.mongodb.org/mongo-driver v1.7.0 // indirect
 	go.uber.org/zap v1.17.0
 )

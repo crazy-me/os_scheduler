@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"github.com/crazy-me/os_scheduler/common/constants"
 	"github.com/crazy-me/os_scheduler/common/entity"
 	"os"
 	"strings"
@@ -28,6 +27,6 @@ func UnpackJob(value []byte) (ret *entity.Job, err error) {
 	return
 }
 
-func ExtractJobKey(jobKey string) string {
-	return strings.TrimPrefix(jobKey, constants.JOB_SAVE_DIR)
+func ExtractJobKey(srcKey, jobKey string) string {
+	return strings.TrimPrefix(jobKey, srcKey)
 }

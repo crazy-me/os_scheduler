@@ -21,7 +21,7 @@ func RunServer() {
 	route.LoadHTMLGlob("resource/view/*")
 	route.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": "多任务调度系统",
+			"title": "Job Manage",
 		})
 	})
 	route.POST("/job/save", api.SaveJob)

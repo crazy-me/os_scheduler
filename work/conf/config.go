@@ -35,6 +35,7 @@ type Etcd struct {
 type Mongo struct {
 	Endpoints string `mapstructure:"endpoints" json:"endpoints" yaml:"endpoints"`
 	Timeout   int    `mapstructure:"timeout" json:"timeout" yaml:"timeout"`
+	Db        string `mapstructure:"db" json:"db" yaml:"db"`
 }
 
 // Redis 配置

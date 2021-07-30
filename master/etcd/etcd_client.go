@@ -11,6 +11,7 @@ import (
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
+	"os"
 	"time"
 )
 
@@ -39,6 +40,15 @@ func InitEtcd() (err error) {
 	if conn, err = clientv3.New(config); err != nil {
 		logger.L.Error("etcd clientv3.New err:", zap.Any("connect", err))
 		return
+	}
+
+	// 3.X版本使用新的均衡器clientv3.New不会抛出链接错误,使用Status函数来检测当前的连接状态
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	_, err = conn.Status(ctx, config.Endpoints[0])
+	if err != nil {
+		logger.L.Error("etcd connection", zap.Any("err", err))
+		os.Exit(-1)
 	}
 
 	kv = clientv3.NewKV(conn)

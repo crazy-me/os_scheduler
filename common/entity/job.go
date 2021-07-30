@@ -1,19 +1,25 @@
 package entity
 
 import (
+	"context"
 	"github.com/gorhill/cronexpr"
 	"time"
 )
 
-var JobResultChan chan *JobExecuteResult
-
 // Job 任务
 type Job struct {
-	JobId      int    `json:"job_id"`
-	JobName    string `json:"job_name"`
-	JobType    string `json:"job_type"`
-	JobCommand string `json:"job_command"`
-	JobExpr    string `json:"job_expr"`
+	JobId      int    `json:"job_id" bson:"job_id"`
+	JobName    string `json:"job_name" bson:"job_name"`
+	JobType    string `json:"job_type" bson:"job_type"`
+	JobCommand string `json:"job_command" bson:"job_command"`
+	JobExpr    string `json:"job_expr" bson:"job_expr"`
+}
+
+// JobLog 任务结果日志记录
+type JobLog struct {
+	Job
+	RunTime time.Time   `json:"run_time" bson:"run_time"`
+	Data    interface{} `json:"data" bson:"data"`
 }
 
 // JobSchedulerPlan 任务调度计划
@@ -25,9 +31,11 @@ type JobSchedulerPlan struct {
 
 // JobExecuteStatus 任务执行状态
 type JobExecuteStatus struct {
-	Job      *Job
-	PlanTime time.Time // 理论计划执行时间
-	RealTime time.Time // 实际计划执行时间
+	Job        *Job
+	PlanTime   time.Time          // 理论计划执行时间
+	RealTime   time.Time          // 实际计划执行时间
+	CancelCtx  context.Context    // 任务上下文
+	CancelFunc context.CancelFunc // 用于取消任务
 }
 
 // JobExecuteResult 任务执行结果
@@ -60,5 +68,6 @@ func BuildJobExecStatus(jobPlan *JobSchedulerPlan) (jobExecuteStatus *JobExecute
 		PlanTime: jobPlan.NextTime,
 		RealTime: time.Now(),
 	}
+	jobExecuteStatus.CancelCtx, jobExecuteStatus.CancelFunc = context.WithCancel(context.Background())
 	return
 }
