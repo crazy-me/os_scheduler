@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"fmt"
 	"github.com/crazy-me/os_scheduler/common/constants"
 	"github.com/crazy-me/os_scheduler/common/entity"
 	"github.com/crazy-me/os_scheduler/work/conf"
@@ -62,22 +61,13 @@ func (scheduler *Scheduler) handleJobResult(jobResult *entity.JobExecuteResult) 
 	jobKey := jobResult.ExecStatus.Job.JobType + "/" +
 		strconv.Itoa(jobResult.ExecStatus.Job.JobId)
 	delete(scheduler.jobExecutingTable, jobKey)
-	//jobLog := entity.JobLog{
-	//	Job:     entity.Job{
-	//		JobId:      jobResult.ExecStatus.Job.JobId,
-	//		JobName:    jobResult.ExecStatus.Job.JobName,
-	//		JobType:    jobResult.ExecStatus.Job.JobType,
-	//		JobCommand: jobResult.ExecStatus.Job.JobCommand,
-	//		JobExpr:    jobResult.ExecStatus.Job.JobExpr,
-	//	},
-	//	RunTime: jobResult.StartTime,
-	//	Data:    jobResult.Output,
-	//}
-	//one, err := mongo.Cli.InsertOne("server", jobLog)
+	// TODO 投递任务结果持久化数据
+	TaskResult.PushTaskResult(jobResult)
 
-	fmt.Println("任务名称:", jobResult.ExecStatus.Job.JobName)
-	fmt.Println("任务命令:", jobResult.ExecStatus.Job.JobCommand)
-	fmt.Println("任务执行结果:", string(jobResult.Output), jobResult.Err)
+	//fmt.Println("任务名称:", jobResult.ExecStatus.Job.JobName)
+	//fmt.Println("任务命令:", jobResult.ExecStatus.Job.JobCommand)
+	//fmt.Println("任务执行结果:", string(jobResult.Output))
+	//fmt.Println("===========================================")
 }
 
 // buildJobSchedulerPlan 构建执行计划
@@ -109,6 +99,10 @@ func InitSchedule() (err error) {
 		jobPlanTable:      make(map[string]*entity.JobSchedulerPlan),
 		jobExecutingTable: make(map[string]*entity.JobExecuteStatus, conf.C.JobEventChan),
 	}
+
+	// 初始化任务记录
+	InitRecord()
+
 	// 拉起调度协程
 	go ScheduleInstance.schedulerLoop()
 	return

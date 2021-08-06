@@ -37,7 +37,7 @@ func InitMongo() (err error) {
 	return
 }
 
-// InsertOne 写入条文档
+// InsertOne 写入单条文档
 func (mongodb *Mongo) InsertOne(table string, document interface{}) (insertId string, err error) {
 	var (
 		insertOneResult *mongo.InsertOneResult

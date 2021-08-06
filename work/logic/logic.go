@@ -5,7 +5,7 @@ import (
 	"github.com/crazy-me/os_scheduler/common/constants"
 	"github.com/crazy-me/os_scheduler/common/entity"
 	"github.com/crazy-me/os_scheduler/common/utils"
-	etcd2 "github.com/crazy-me/os_scheduler/work/data_source/etcd"
+	"github.com/crazy-me/os_scheduler/work/data_source/etcd"
 	"github.com/crazy-me/os_scheduler/work/logger"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -28,7 +28,7 @@ func WatchJobs() (err error) {
 	)
 
 	// 初始化所有任务并加载到内存
-	if getResp, err = etcd2.Cli.Kv.Get(context.TODO(), constants.JOB_SAVE_DIR, clientv3.WithPrefix()); err != nil {
+	if getResp, err = etcd.Cli.Kv.Get(context.TODO(), constants.JOB_SAVE_DIR, clientv3.WithPrefix()); err != nil {
 		logger.L.Error("logic-WatchJobs", zap.Any("etcd.Cli.Kv.Get", err))
 		os.Exit(-1)
 	}
@@ -51,7 +51,7 @@ func WatchJobs() (err error) {
 	go func() {
 		// 从revision向后监听事件变化
 		watchStartRevision = getResp.Header.Revision + 1
-		watchChan = etcd2.Cli.Watch.Watch(context.TODO(), constants.JOB_SAVE_DIR, clientv3.WithRev(watchStartRevision), clientv3.WithPrefix())
+		watchChan = etcd.Cli.Watch.Watch(context.TODO(), constants.JOB_SAVE_DIR, clientv3.WithRev(watchStartRevision), clientv3.WithPrefix())
 		// 处理监听事件
 		for watchResp = range watchChan {
 			for _, watchEvent = range watchResp.Events {
@@ -83,7 +83,7 @@ func WatchJobs() (err error) {
 			jobKillerWatchResp  clientv3.WatchResponse
 			jobKillerWatchEvent *clientv3.Event
 		)
-		jobKillerChan = etcd2.Cli.Watch.Watch(context.TODO(), constants.JOB_KILLER_DIR, clientv3.WithPrefix())
+		jobKillerChan = etcd.Cli.Watch.Watch(context.TODO(), constants.JOB_KILLER_DIR, clientv3.WithPrefix())
 
 		// 处理监听事件
 		for jobKillerWatchResp = range jobKillerChan {
