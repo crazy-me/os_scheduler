@@ -3,10 +3,8 @@ package logic
 import (
 	"github.com/crazy-me/os_scheduler/common/entity"
 	"github.com/crazy-me/os_scheduler/work/conf"
-	"github.com/crazy-me/os_scheduler/work/data_source/redis"
 	"github.com/crazy-me/os_scheduler/work/logger"
 	"go.uber.org/zap"
-	"strconv"
 )
 
 var (
@@ -21,19 +19,36 @@ type Record struct {
 // WriteTaskResultLoop 记录任务结果
 func (record *Record) WriteTaskResultLoop() {
 	var (
-		jobResult *entity.JobExecuteResult
-		isWrite   bool
+		jobResult *entity.JobExecuteResult // 任务结果对象
+		jobInfo   *entity.Job              // 任务信息对象
 	)
-	redisClient := redis.Pool()
-	defer redisClient.ReleaseRedisClient()
+
 	for {
 		select {
 		case jobResult = <-record.TaskResultChan:
-			isWrite = redisClient.Hset(jobResult.ExecStatus.Job.JobType,
-				strconv.Itoa(jobResult.ExecStatus.Job.JobId),
-				string(jobResult.Output))
-			if !isWrite { // 记录失败
-				logger.L.Info("WriteTaskResultLoop:"+jobResult.ExecStatus.Job.JobCommand, zap.Any("info", "job write fail"))
+			jobInfo = jobResult.ExecStatus.Job
+			// 任务执行错误记录日志并跳过
+			if jobResult.Err != nil {
+				logger.L.Error("record.WriteTaskResultLoop", zap.Any(string(jobResult.Output), jobInfo))
+				continue
+			}
+			jobAgent := &Agent{JobInfo: jobResult}
+			switch jobInfo.JobType {
+			case "network":
+				jobAgent.Func = jobAgent.PushNetwork
+			case "server":
+				jobAgent.Func = jobAgent.PushServer
+			case "mysql":
+				jobAgent.Func = jobAgent.PushMysql
+			case "apply":
+				jobAgent.Func = jobAgent.PushApply
+			default: // 防止 jobAgent.Func 为nil
+				jobAgent.Func = jobAgent.PushEmpty
+			}
+
+			pushErr := jobAgent.Func()
+			if pushErr != nil {
+				logger.L.Error("record.WriteTaskResultLoop", zap.Any("http push err:", pushErr))
 			}
 		}
 	}

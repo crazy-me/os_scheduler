@@ -1,5 +1,6 @@
 # system configuration
-job-event-chan: 1000
+job-event-chan: 1000 # 全局通道容量
+agent-endpoint: "http://127.0.0.1:8000/v1/n9e/push" # 数据上报接口
 
 # etcd configuration
 etcd:

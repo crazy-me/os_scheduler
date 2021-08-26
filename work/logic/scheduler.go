@@ -61,13 +61,8 @@ func (scheduler *Scheduler) handleJobResult(jobResult *entity.JobExecuteResult) 
 	jobKey := jobResult.ExecStatus.Job.JobType + "/" +
 		strconv.Itoa(jobResult.ExecStatus.Job.JobId)
 	delete(scheduler.jobExecutingTable, jobKey)
-	// TODO 投递任务结果持久化数据
+	// TODO 投递任务结果存储数据
 	TaskResult.PushTaskResult(jobResult)
-
-	//fmt.Println("任务名称:", jobResult.ExecStatus.Job.JobName)
-	//fmt.Println("任务命令:", jobResult.ExecStatus.Job.JobCommand)
-	//fmt.Println("任务执行结果:", string(jobResult.Output))
-	//fmt.Println("===========================================")
 }
 
 // buildJobSchedulerPlan 构建执行计划

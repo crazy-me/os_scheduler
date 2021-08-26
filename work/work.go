@@ -4,7 +4,6 @@ import (
 	"flag"
 	"github.com/crazy-me/os_scheduler/work/conf"
 	"github.com/crazy-me/os_scheduler/work/data_source/etcd"
-	"github.com/crazy-me/os_scheduler/work/data_source/redis"
 	"github.com/crazy-me/os_scheduler/work/logger"
 	"github.com/crazy-me/os_scheduler/work/logic"
 	"log"
@@ -16,7 +15,7 @@ var configFile string
 func main() {
 	initArgs()
 	initLoad()
-	redis.InitRedis()
+	//redis.InitRedis()
 	// 调度器
 	if err := logic.InitSchedule(); err != nil {
 		log.Println("logic.InitSchedule err:", err)
