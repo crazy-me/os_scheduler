@@ -8,7 +8,7 @@ import (
 
 // Job 任务
 type Job struct {
-	JobId      int    `json:"job_id" bson:"job_id"`
+	JobId      string `json:"job_id" bson:"job_id"`
 	JobName    string `json:"job_name" bson:"job_name"`
 	JobIdent   string `json:"job_ident"`
 	JobType    string `json:"job_type" bson:"job_type"`

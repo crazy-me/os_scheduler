@@ -70,7 +70,7 @@ func (e *clientEtcd) SaveJob(job *entity.Job) (oldJob *entity.Job, err error) {
 		resp     *clientv3.PutResponse
 	)
 
-	jobKey = fmt.Sprintf(constants.JOB_SAVE_DIR+"%s/%d", job.JobType, job.JobId)
+	jobKey = fmt.Sprintf(constants.JOB_SAVE_DIR+"%s/%s", job.JobType, job.JobId)
 	fmt.Println(jobKey)
 	if jobValue, err = json.Marshal(job); err != nil {
 		return
@@ -93,7 +93,7 @@ func (e *clientEtcd) DeleteJob(job *entity.Job) (oldJob *entity.Job, err error) 
 		resp   *clientv3.DeleteResponse
 	)
 
-	jobKey = fmt.Sprintf(constants.JOB_SAVE_DIR+"%s/%d", job.JobType, job.JobId)
+	jobKey = fmt.Sprintf(constants.JOB_SAVE_DIR+"%s/%s", job.JobType, job.JobId)
 	if resp, err = e.kv.Delete(context.TODO(), jobKey, clientv3.WithPrevKV()); err != nil {
 		return
 	}
@@ -140,7 +140,7 @@ func (e *clientEtcd) KillJob(job *entity.Job) (err error) {
 		return
 	}
 
-	killJobKey = fmt.Sprintf(constants.JOB_KILLER_DIR+"%s/%d", job.JobType, job.JobId)
+	killJobKey = fmt.Sprintf(constants.JOB_KILLER_DIR+"%s/%s", job.JobType, job.JobId)
 	// 向etcd投递事件来通知Work杀掉当前任务
 	if _, err = e.kv.Put(context.TODO(), killJobKey, "", clientv3.WithLease(lessGrant.ID)); err != nil {
 		return

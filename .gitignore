@@ -17,5 +17,6 @@ logs/
 ### test ###
 /testing/
 tmp/
+test_script
 # Dependency directories (remove the comment below to include it)
 # vendor/

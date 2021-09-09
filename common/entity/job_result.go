@@ -17,14 +17,9 @@ type Network struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 	Data struct {
-		CpuRate          string `json:"cpu_rate"`
-		RunStatus        string `json:"run_status"`
-		Loss             string `json:"loss"`
-		MemRate          string `json:"mem_rate"`
-		PingResponseTime string `json:"ping_response_time"`
-		PingStatus       string `json:"ping_status"`
-		Runtime          string `json:"runtime"`
-		SystemVersion    string `json:"system_version"`
+		CpuRate string `json:"cpu_rate"`
+		MemRate string `json:"mem_rate"`
+		Runtime string `json:"runtime"`
 	} `json:"data"`
 }
 

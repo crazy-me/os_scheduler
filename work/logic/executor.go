@@ -6,7 +6,6 @@ import (
 	"github.com/crazy-me/os_scheduler/work/data_source/etcd"
 	"github.com/crazy-me/os_scheduler/work/lock"
 	"os/exec"
-	"strconv"
 	"time"
 )
 
@@ -37,7 +36,7 @@ func (executor *Executor) RunJob(jobExecutor *entity.JobExecuteStatus) {
 
 		// TODO 获取分布式锁
 		jobKey = constants.JOB_LOCK_DIR + jobExecutor.Job.JobType +
-			"/" + strconv.Itoa(jobExecutor.Job.JobId)
+			"/" + jobExecutor.Job.JobId
 		jobLock = etcd.Cli.CreateJobLock(jobKey)
 		// 开始时间
 		result.StartTime = time.Now()

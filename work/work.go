@@ -39,6 +39,8 @@ func main() {
 		log.Println("logic.WatchJobs err:", err)
 		os.Exit(-1)
 	}
+
+	go logic.TaskResultLoop()
 	select {}
 }
 

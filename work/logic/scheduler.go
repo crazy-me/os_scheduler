@@ -5,7 +5,6 @@ import (
 	"github.com/crazy-me/os_scheduler/common/entity"
 	"github.com/crazy-me/os_scheduler/work/conf"
 	"github.com/gorhill/cronexpr"
-	"strconv"
 	"time"
 )
 
@@ -39,7 +38,7 @@ func (scheduler *Scheduler) handleJobEvent(jobEvent *entity.JobEvent) {
 	)
 	switch jobEvent.EventType {
 	case constants.JOB_PUT_EVENT: // 保存任务事件
-		jobPlanTableKey = jobEvent.Job.JobType + "/" + strconv.Itoa(jobEvent.Job.JobId)
+		jobPlanTableKey = jobEvent.Job.JobType + "/" + jobEvent.Job.JobId
 		if jobSchedulerPlan, err = scheduler.buildJobSchedulerPlan(jobEvent.Job); err != nil {
 			return
 		}
@@ -59,7 +58,7 @@ func (scheduler *Scheduler) handleJobEvent(jobEvent *entity.JobEvent) {
 // TODO 任务执行结果处理
 func (scheduler *Scheduler) handleJobResult(jobResult *entity.JobExecuteResult) {
 	jobKey := jobResult.ExecStatus.Job.JobType + "/" +
-		strconv.Itoa(jobResult.ExecStatus.Job.JobId)
+		jobResult.ExecStatus.Job.JobId
 	delete(scheduler.jobExecutingTable, jobKey)
 	// TODO 投递任务结果存储数据
 	TaskResult.PushTaskResult(jobResult)
@@ -174,7 +173,7 @@ func (scheduler *Scheduler) RunSchedulerJob(jobPlan *entity.JobSchedulerPlan) {
 		jobKey       string
 	)
 	// 一个任务可能执行很长时间,如果任务正在执行则跳过本次调度
-	jobKey = jobPlan.Job.JobType + "/" + strconv.Itoa(jobPlan.Job.JobId)
+	jobKey = jobPlan.Job.JobType + "/" + jobPlan.Job.JobId
 	// 执行调度表有此任务则跳过本次调度
 	if jobExecute, jobIsExecute = scheduler.jobExecutingTable[jobKey]; jobIsExecute {
 		return
