@@ -71,7 +71,6 @@ func (e *clientEtcd) SaveJob(job *entity.Job) (oldJob *entity.Job, err error) {
 	)
 
 	jobKey = fmt.Sprintf(constants.JOB_SAVE_DIR+"%s/%s", job.JobType, job.JobId)
-	fmt.Println(jobKey)
 	if jobValue, err = json.Marshal(job); err != nil {
 		return
 	}
@@ -94,7 +93,7 @@ func (e *clientEtcd) DeleteJob(job *entity.Job) (oldJob *entity.Job, err error) 
 	)
 
 	jobKey = fmt.Sprintf(constants.JOB_SAVE_DIR+"%s/%s", job.JobType, job.JobId)
-	if resp, err = e.kv.Delete(context.TODO(), jobKey, clientv3.WithPrevKV()); err != nil {
+	if resp, err = e.kv.Delete(context.TODO(), jobKey, clientv3.WithPrevKV(), clientv3.WithPrefix()); err != nil {
 		return
 	}
 

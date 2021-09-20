@@ -28,7 +28,7 @@ func main() {
 
 // initArgs 命令行参数
 func initArgs() {
-	flag.StringVar(&configFile, "c", "etc/scheduler.yaml", "configuration")
+	flag.StringVar(&configFile, "c", "etc/master.yaml", "configuration")
 	flag.Parse()
 }
 

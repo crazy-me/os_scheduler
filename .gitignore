@@ -15,7 +15,7 @@
 *.out
 logs/
 ### test ###
-/testing/
+testing
 tmp/
 test_script
 # Dependency directories (remove the comment below to include it)

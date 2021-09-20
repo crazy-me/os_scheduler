@@ -17,8 +17,8 @@ type ResourcePublish interface {
 func init() {
 	resourceTypeMap = make(map[string]ResourcePublish)
 	resourceTypeMap["network"] = &mapper.Network{}
-	resourceTypeMap["win"] = &mapper.Win{}
 	resourceTypeMap["linux"] = &mapper.Linux{}
+	resourceTypeMap["windows"] = &mapper.Win{}
 }
 
 func TaskResultLoop() {
