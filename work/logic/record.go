@@ -23,7 +23,8 @@ func InitRecord() {
 	return
 }
 
-// PushTaskResult 投递任务结果记录
+// PushTaskResult
+// TODO 接收调度器的任务结果
 func (record *Record) PushTaskResult(jobResult *entity.JobExecuteResult) {
 	record.TaskResultChan <- jobResult
 }

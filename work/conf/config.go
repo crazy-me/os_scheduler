@@ -12,12 +12,14 @@ var (
 )
 
 type Conf struct {
-	JobEventChan  int    `mapstructure:"job-event-chan" json:"job-event-chan" yaml:"job-event-chan"`
-	AgentEndpoint string `mapstructure:"agent-endpoint" json:"agent-endpoint" yaml:"agent-endpoint"`
-	Etcd          Etcd   `mapstructure:"etcd" json:"etcd" yaml:"etcd"`
-	Mongo         Mongo  `mapstructure:"mongo" json:"mongo" yaml:"mongo"`
-	Redis         Redis  `mapstructure:"redis" json:"redis" yaml:"redis"`
-	Zap           Zap    `mapstructure:"zap" json:"zap" yaml:"zap"`
+	JobEventChan  int      `mapstructure:"job-event-chan" json:"job-event-chan" yaml:"job-event-chan"`
+	AgentEndpoint string   `mapstructure:"agent-endpoint" json:"agent-endpoint" yaml:"agent-endpoint"`
+	NoCalculation []string `mapstructure:"no-calculation" json:"no-calculation" yaml:"no-calculation"`
+
+	Etcd  Etcd  `mapstructure:"etcd" json:"etcd" yaml:"etcd"`
+	Mongo Mongo `mapstructure:"mongo" json:"mongo" yaml:"mongo"`
+	Redis Redis `mapstructure:"redis" json:"redis" yaml:"redis"`
+	Zap   Zap   `mapstructure:"zap" json:"zap" yaml:"zap"`
 }
 
 // System 系统配置

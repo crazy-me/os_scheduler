@@ -55,7 +55,7 @@ func (scheduler *Scheduler) handleJobEvent(jobEvent *entity.JobEvent) {
 }
 
 // HandleJobResult 任务执行结果,从任务执行表中移除本次执行完的任务
-// TODO 任务执行结果处理
+// TODO 任务执行结果处理 来自执行器的任务结果
 func (scheduler *Scheduler) handleJobResult(jobResult *entity.JobExecuteResult) {
 	jobKey := jobResult.ExecStatus.Job.JobType + "/" +
 		jobResult.ExecStatus.Job.JobId

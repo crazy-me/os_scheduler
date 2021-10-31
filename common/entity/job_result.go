@@ -12,14 +12,21 @@ type AgentPush struct {
 	Value string `json:"value"`
 }
 
+// JobResultDto 任务结果
+type JobResultDto struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data map[string]string
+}
+
 // Network 网络设备指标实体
 type Network struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 	Data struct {
-		CpuRate string `json:"cpu_rate"`
-		MemRate string `json:"mem_rate"`
-		Runtime string `json:"runtime"`
+		CpuUtil string `json:"cpu_util"`
+		MemUtil string `json:"mem_util"`
+		UpTime  string `json:"up_time"`
 	} `json:"data"`
 }
 

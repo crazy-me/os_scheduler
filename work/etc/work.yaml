@@ -1,6 +1,7 @@
 # system configuration
 job-event-chan: 1000 # 全局通道容量
 agent-endpoint: "http://127.0.0.1:8000/v1/n9e/push" # 数据上报接口
+no-calculation: ["up_time","cpu_util_avg","vir_mem_util","phy_mem_util","all_disk_util","load_one","load_five","load_fifteen"]
 
 # etcd configuration
 etcd:

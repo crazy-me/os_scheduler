@@ -21,6 +21,8 @@ func init() {
 	resourceTypeMap["windows"] = &mapper.Win{}
 }
 
+// TaskResultLoop
+// TODO 处理调度结果
 func TaskResultLoop() {
 	for {
 		select {
